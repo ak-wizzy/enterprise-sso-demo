@@ -25,7 +25,7 @@ services:
       - "traefik.http.routers.sso-demo.entrypoints=websecure"
       - "traefik.http.routers.sso-demo.tls.certresolver=cloudflare"
       - "traefik.http.routers.sso-demo.middlewares=secured-chain@docker"
-      - "traefik.http.services.sso-demo.loadbalancer.server.port=5000"
+      - "traefik.http.services.sso-demo.loadbalancer.server.port=5001"
     
     networks:
       - reverse-proxy                  #same network with Postfix-relay
