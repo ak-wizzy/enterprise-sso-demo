@@ -1,203 +1,174 @@
-====================================
-SAML Lab – Version 1.0
-====================================
+Enterprise SAML SSO Sandbox
 
-A lightweight, containerised SAML 2.0 Service Provider (SP) built with Flask and python3-saml, designed for hands-on learning, testing, and experimentation with Microsoft Entra ID.
+A lightweight, containerised SAML 2.0 Service Provider (SP) built with Flask and python3-saml, designed for hands-on learning, testing, and troubleshooting of enterprise federation using Microsoft Entra ID.
 
-This project leans into clarity, visibility, and real-world behaviour over production polish, it’s a lab you can actually *understand*, not just run.
+This project focuses on visibility, clarity, and real-world authentication behaviour rather than production abstraction. The goal is to provide a SAML environment that engineers can actually inspect, understand, and extend.
 
-------------------------------------
+Overview
 
-## Purpose
+This sandbox demonstrates a complete enterprise SAML authentication flow using Microsoft Entra ID as the Identity Provider (IdP).
 
-This lab exists to:
+It provides a safe environment for:
 
-* Understand SAML authentication end-to-end
-* Inspect real SAML claims from Entra ID
-* Experiment with group → role mapping
-* Observe session state and lifecycle
-* Provide a stable foundation for future identity experiments
+Understanding SAML authentication end-to-end
+Inspecting real SAML assertions and claims
+Exploring session handling and federation behaviour
+Testing group-to-role mapping concepts
+Troubleshooting enterprise SSO integrations
 
-------------------------------------
+The application includes a modern dark-themed UI and claims inspection portal designed to make identity flows easier to visualise and debug.
 
-## Architecture Overview
+Architecture
+Core Components
+Component	Technology
+Framework	Flask
+SAML Library	python3-saml (OneLogin)
+Identity Provider	Microsoft Entra ID
+Container Platform	Docker
+Reverse Proxy Support	NGINX / Cloudflare Compatible
+Authentication Flow
+User
+  ↓
+Flask SAML Service Provider
+  ↓
+Microsoft Entra ID
+  ↓
+SAML Assertion
+  ↓
+Claims & Session Inspection
 
-* **Framework:** Flask
-* **SAML Library:** python3-saml (OneLogin)
-* **Identity Platform:** Microsoft Entra ID (Azure AD / External ID)
-* **Containerisation:** Docker + docker-compose
-* **Auth Flow:** SP-initiated SAML login
+The application operates as a SAML Service Provider (SP) and supports SP-initiated authentication flows.
 
-------------------------------------
+Key Features
+Enterprise SAML Authentication
+SP-initiated SAML login
+Assertion Consumer Service (/acs)
+Session handling and inspection
+Entra ID federation integration
+Claims Inspection Portal
 
-## What’s New (v1.0+)
+The Claims page provides visibility into:
 
-Beyond standard Entra ID authentication, this lab now supports **social identity federation** via Entra External ID.
+NameID
+Session Index
+Login timestamp
+Raw SAML claims
+Group memberships
+Derived application roles
+Certificate validation visibility (debug mode)
 
-Users can now sign in using:
+This makes it easy to inspect how Entra ID issues identity assertions in real-world federation scenarios.
 
-* Google
-* Facebook
+Group → Role Mapping
 
-This means anyone can test the application using their own personal accounts — no need for a corporate Entra tenant user.
+Supports mapping Entra group Object IDs to internal application roles.
 
-👉 Apple ID support is planned and will be added in a future iteration.
+Designed to:
 
-Under the hood, all social authentication is still routed through Entra ID, keeping the architecture consistent with enterprise SSO patterns.
+remain simple
+be easy to extend
+safely handle users without assigned groups
+Runtime Debug Mode
 
--------------------------------------
+Debug visibility can be toggled directly from the UI without restarting the application.
 
-## Implemented Features (v1.0)
+Useful for:
 
-### SAML Authentication (SP-Initiated)
+troubleshooting federation issues
+inspecting claims
+validating certificate behaviour
+observing session state
+Logout Support
+Local Logout
+Clears the Flask session safely
+Always available regardless of IdP state
+Federated Logout (SLO)
+Supports SAML Single Logout
+Gracefully handles IdP logout failures
+Prevents session-breaking logout loops
+UI & Design
 
-* Redirects users to Entra ID for authentication
-* Processes SAML responses via `/acs`
-* Validates assertions and extracts claims
+The application includes a lightweight dark-themed interface focused on readability and observability.
 
--------------------------------------
+The UI was intentionally designed to:
 
-## Environment-Driven Configuration
+simplify federation testing
+improve claim visibility
+provide a cleaner troubleshooting experience
+separate enterprise SSO testing from social federation experiments
+Environment-Driven Configuration
 
-All sensitive values are injected via environment variables:
+Sensitive values are injected through environment variables:
 
-* Flask secret key
-* IdP entity ID
-* IdP SSO URL
-* IdP signing certificate
+Flask secret key
+Entra Entity ID
+SAML SSO URL
+IdP signing certificate
 
-No secrets are hardcoded. This keeps the project portable and container-friendly.
+This keeps secrets out of source control and simplifies container deployments.
 
--------------------------------------
+Containerisation
 
-## Session Management
+The project ships with:
 
-After authentication, the app stores:
+Dockerfile
+docker-compose configuration
+GitHub Actions CI/CD support
+Docker Hub deployment workflow
 
-* NameID
-* Session Index
-* Login timestamp (UTC)
-* Raw SAML attributes
-* Derived roles
-* Debug state
+This enables rapid testing and portable deployments across environments.
 
-Session data is fully visible via the UI for inspection.
-
-------------------------------------
-
-## Claims Inspection UI
-
-A dedicated Claims page provides:
-
-* Identity summary (NameID, Session Index)
-* Session overview (login time, roles, group count)
-* Derived roles (from group mapping)
-* Raw SAML claims (exactly as issued by Entra ID)
-* Debug indicators when enabled
-
-Nothing is hidden — what Entra sends is exactly what you see.
-
--------------------------------------
-
-## Group → Role Mapping (Foundation)
-
-* Maps Entra group Object IDs to internal roles
-* Centralised and easy to extend
-* Handles users with no groups safely
-
-(Currently manual mapping — ready for automation later.)
-
---------------------------------------
-
-## Debug Mode Toggle
-
-* Can be switched on/off at runtime
-* Adds extra diagnostic visibility
-* No redeploy required
-
-------------------------------------
-
-## Logout Behaviour
-
-### Local Logout
-
-* Clears Flask session reliably
-* Always works regardless of IdP state
-
-### Federated Logout (SLO)
-
-* Attempts full SAML logout via Entra ID
-* Fails gracefully if IdP logout fails
-* Never breaks the user session flow
-
-------------------------------------
-
-## Explicitly Out of Scope (v1.0)
-
-This is intentionally a lab, not a production system:
-
-* No production-grade hardening
-* No HTTPS termination (handled externally)
-* No metadata auto-generation
-* No dynamic certificate rotation
-* No ABAC / advanced authorization
-* No persistence layer
-* No multi-tenant IdP routing
-
-------------------------------------
-
-## Intended Usage
+Intended Usage
 
 This project is ideal for:
 
-* Learning SAML beyond surface-level setups
-* Debugging Entra ID SAML claims
-* Testing federation scenarios (including social login)
-* Prototyping identity-aware applications
-* Serving as a clean reference implementation
+SAML learning labs
+Enterprise SSO troubleshooting
+Identity and federation testing
+Entra ID experimentation
+Claims analysis
+Portfolio / demonstration environments
 
-------------------------------------
+It is intentionally designed as an engineering sandbox rather than a production-ready identity platform.
 
-## Roadmap / Future Enhancements
+Open Source
 
-* Apple ID integration
-* Metadata endpoint (`/metadata`)
-* Certificate rotation awareness
-* Signed SAML requests
-* Role-based access enforcement
-* UI improvements
-* Optional persistence layer
-* Expanded identity provider support
+This project is open source and intended for collaborative learning and experimentation.
 
-------------------------------------
+Contributions are welcome, including:
 
-## Open Source & Contribution
+UI improvements
+federation enhancements
+troubleshooting tools
+additional observability features
+Roadmap
 
-This project is open source and available for anyone to use, learn from, and improve.
+Planned future enhancements include:
 
-Contributions are welcome — whether it’s fixing bugs, improving the UI, or extending identity integrations.
+Metadata endpoint (/metadata)
+Signed SAML requests
+Expanded role-based access controls
+Enhanced federation diagnostics
+Improved certificate lifecycle visibility
+Additional UI refinements
+Related Project
 
-If you’ve ever wrestled with SAML in the wild, you already know: shared knowledge makes this space better.
+A separate companion project is being developed for:
 
-A permissive open-source license is included to encourage collaboration and reuse.
+Federated Social Login Sandbox
 
-------------------------------------
+This environment focuses on:
 
-## Versioning
+Google federation
+Facebook federation
+Apple ID federation
+Entra External ID (CIAM)
+OAuth/OpenID Connect identity brokering
 
-**Current version:** v1.0
+The two projects are intentionally separated to maintain clean architectural boundaries between enterprise SAML federation and consumer/social identity flows.
 
-This version represents:
+Version
 
-* A stable SAML authentication flow
-* Social login via Entra External ID (Google & Facebook)
-* A reliable baseline for future enhancements
+Current Release:
 
-------------------------------------
-
-## v1.01
-
-* Introduced mandatory enforcement for `givenName` and `surname` attributes
-* Ensures identity completeness for downstream processing
-
-
+v1.1
