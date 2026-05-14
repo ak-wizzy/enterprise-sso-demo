@@ -17,6 +17,6 @@ RUN pip install gunicorn
 
 COPY app/ .
 
-EXPOSE 5000
+EXPOSE 5001
 
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app", "--access-logfile", "-", "--error-logfile", "-", "--log-level", "info"]
