@@ -1,4 +1,6 @@
+########################################
 Enterprise SAML SSO Sandbox
+#########################################
 
 A lightweight, containerised SAML 2.0 Service Provider (SP) built with Flask and python3-saml, designed for hands-on learning, testing, and troubleshooting of enterprise federation using Microsoft Entra ID.
 
