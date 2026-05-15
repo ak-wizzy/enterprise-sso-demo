@@ -73,9 +73,13 @@ Login with Microsoft
 
 <hr>
 
-<a href="/toggle-debug" class="btn btn-warning btn-login">
-Toggle Debug Panel
+{% if authenticated %}
+
+<a href="/claims" class="btn btn-secondary btn-login">
+    Developer Diagnostics
 </a>
+
+{% endif %}
 
 <div class="status">
 
