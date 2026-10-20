@@ -1,6 +1,6 @@
 services:
   enterprise-sso-demo:
-    build: .
+    image: akwizzy/pilot-repo:enterprise-sso-demo
     container_name: enterprise-sso-demo
     restart: unless-stopped
 
