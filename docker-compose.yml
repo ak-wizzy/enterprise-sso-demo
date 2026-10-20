@@ -3,6 +3,10 @@ services:
     build: .
     container_name: enterprise-sso-demo
     restart: unless-stopped
+
+    ports:
+      - "5001:5001"
+
     environment:
       - FLASK_SECRET_KEY=${FLASK_SECRET_KEY}
       - SAML_IDP_ENTITY_ID=${SAML_IDP_ENTITY_ID}
@@ -10,17 +14,9 @@ services:
       - SAML_IDP_X509CERT=${SAML_IDP_X509CERT}
       - SAML_DEBUG=${SAML_DEBUG}
       - SAML_ENABLE_SLO=${SAML_ENABLE_SLO}
-      
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sso-demo.rule=Host(`sso-demo.aktechnoservices.com`)"
-      - "traefik.http.routers.sso-demo.entrypoints=websecure"
-      - "traefik.http.routers.sso-demo.tls.certresolver=cloudflare"
-      - "traefik.http.routers.sso-demo.middlewares=secured-chain@docker"
-      - "traefik.http.services.sso-demo.loadbalancer.server.port=5001"
     
     networks:
-      - reverse-proxy                  #same network with Postfix-relay
+      - reverse-proxy
    
 networks:
   reverse-proxy:
